@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Fish Shop • Sales & Expense Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #f0f4f8;
+      padding: 8px;
+      min-height: 100vh;
+    }
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .panel {
+      border-bottom: 1px solid #eef2f6;
+      padding: 14px 16px;
+    }
+    .panel:last-child {
+      border-bottom: none;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #0b3954;
+    }
+    .panel-badge {
+      background: #e9f2fa;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 12px 16px;
+      background: #fafbfc;
+      border-bottom: 1px solid #eef2f6;
+    }
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b3954;
+    }
+    .date-badge {
+      background: #0b3954;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .shift-timer {
+      font-size: 0.7rem;
+      background: #fef9e7;
+      padding: 3px 10px;
+      border-radius: 12px;
+      color: #8b6c00;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .stat-card {
+      background: #f8fafd;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #e9f0f5;
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: #6b7d8e;
+      letter-spacing: 0.3px;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0b3954;
+    }
+    .fish-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+    .fish-btn {
+      background: #f0f5fb;
+      border: 1px solid #d9e2ec;
+      border-radius: 16px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #153e59;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fish-btn:active {
+      transform: scale(0.95);
+    }
+    .fish-btn.selected {
+      background: #0b3954;
+      color: white;
+      border-color: #0b3954;
+    }
+    .other-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 6px 0;
+    }
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .qty-input {
+      width: 50px;
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    .selected-badge {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #0b3954;
+      background: #e8f0fe;
+      padding: 4px 10px;
+      border-radius: 10px;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .add-btn {
+      background: #0b3954;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 7px 14px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .add-btn:active {
+      transform: scale(0.95);
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.65rem;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 6px;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .expense-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .expense-input {
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #d0d9e4;
+      flex: 2;
+      min-width: 90px;
+      font-size: 0.8rem;
+    }
+    .amount-input {
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid #d0d9e4;
+      width: 80px;
+      font-size: 0.8rem;
+    }
+    .history-lists {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    @media (min-width: 500px) {
+      .history-lists {
+        flex-direction: row;
+      }
+    }
+    .list-box {
+      background: #f9fcff;
+      border-radius: 12px;
+      padding: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #eaf0f6;
+      font-size: 0.75rem;
+      flex: 1;
+    }
+    .list-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .list-item-content {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .search-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1px solid #d0d9e4;
+      font-size: 0.8rem;
+      min-width: 100px;
+    }
+    .btn-sm {
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: white;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-print {
+      background: #1e4a6b;
+      color: white;
+      border: none;
+    }
+    .graph-canvas {
+      margin-top: 6px;
+    }
+    .section-divider {
+      font-size: 0.7rem;
+      color: #8a9aa8;
+      margin: 4px 0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="mainAppContainer">
+  
+  <!-- HEADER -->
+  <div class="header-row">
+    <h1>🐟 FishFlow</h1>
+    <span class="shift-timer">🕘 9:30AM–10:45PM</span>
+    <span class="date-badge" id="currentDateDisplay"></span>
+  </div>
+
+  <!-- PANEL 1: TOTALS -->
+  <div class="panel">
+    <div class="dashboard-grid">
+      <div class="stat-card"><div class="stat-label">💰 Sales</div><div class="stat-value" id="totalSalesDisplay">0</div></div>
+      <div class="stat-card"><div class="stat-label">🧾 Expenses</div><div class="stat-value" id="totalExpensesDisplay">0</div></div>
+      <div class="stat-card"><div class="stat-label">💵 Cash</div><div class="stat-value" id="cashAtHandDisplay">0</div></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: FISH & OTHER ITEMS -->
+  <div class="panel">
+    <div class="panel-header">🐠 Fish & Other Items <span class="panel-badge">Sales Entry</span></div>
+    <div class="section-divider">Fish Prices</div>
+    <div class="fish-grid" id="fishPriceContainer"></div>
+    <div class="section-divider">Other Items</div>
+    <div class="other-items" id="otherItemsContainer"></div>
+    <div class="qty-row">
+      <span style="font-size:0.8rem; font-weight:500;">Qty:</span>
+      <input type="number" id="globalQty" class="qty-input" value="1" min="1">
+      <span class="selected-badge" id="selectedItemLabel">No item</span>
+      <button class="add-btn" id="addItemBtn">➕ Add Sale</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: EXPENSES -->
+  <div class="panel">
+    <div class="panel-header">📝 Add Expense</div>
+    <div class="expense-row">
+      <input type="text" id="expenseName" class="expense-input" placeholder="Expense name">
+      <input type="number" id="expenseAmount" class="amount-input" placeholder="Amount" min="1">
+      <button class="add-btn" id="addExpenseBtn">➕ Add</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: HISTORY -->
+  <div class="panel">
+    <div class="panel-header">📋 History <span class="panel-badge" id="historyDateLabel"></span></div>
+    <div class="search-row">
+      <input type="text" id="historySearch" class="search-input" placeholder="Search date (YYYY-MM-DD)">
+      <button class="btn-sm" id="searchHistoryBtn">🔍 Search</button>
+      <button class="btn-sm btn-print" id="printDayBtn">🖨️ Print PDF</button>
+    </div>
+    <div class="history-lists">
+      <div class="list-box">
+        <strong style="font-size:0.8rem;">🧾 Sales</strong>
+        <div id="salesList"></div>
+      </div>
+      <div class="list-box">
+        <strong style="font-size:0.8rem;">📋 Expenses</strong>
+        <div id="expensesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: ANALYSIS -->
+  <div class="panel">
+    <div class="panel-header">📈 Analysis</div>
+    <div class="graph-canvas">
+      <div style="font-size:0.75rem; font-weight:600; margin-bottom:2px;">Hourly cash flow (this week)</div>
+      <canvas id="hourlyChart" height="150"></canvas>
+    </div>
+    <div class="graph-canvas" style="margin-top:10px;">
+      <div style="font-size:0.75rem; font-weight:600; margin-bottom:2px;">Daily comparison (7 days)</div>
+      <canvas id="dailyChart" height="150"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const STORAGE_DAYS = 'fishflow_days_v2';
+    const TODAY_KEY = () => getLocalDateString();
+
+    const fishPrices = [200,250,300,350,400,450,500,550,600,650,700,750,800,850,900];
+    const otherItems = [
+      { name: 'Wet Fry', price: 100 },
+      { name: 'Kachumbari', price: 50 },
+      { name: 'Soda 500ml', price: 70 },
+      { name: 'Soda 300ml', price: 50 },
+      { name: 'Soda Bottle', price: 60 },
+      { name: 'Soda 2L', price: 200 },
+      { name: 'Maji Keringet', price: 120 },
+      { name: 'Maji 1.2L', price: 70 },
+      { name: 'Maji Small', price: 50 },
+      { name: 'Wetfry Container', price: 30 },
+      { name: 'Greens Container', price: 20 },
+      { name: 'Bag 20', price: 20 },
+      { name: 'Bag 10', price: 10 },
+      { name: 'Managu', price: 70 },
+      { name: 'Managu Special', price: 100 },
+      { name: 'Spinach', price: 70 },
+      { name: 'Kales', price: 50 }
+    ];
+
+    let selectedItem = null;
+    let currentViewDate = TODAY_KEY();
+
+    function getLocalDateString() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+
+    function loadAllDays() {
+      try {
+        const data = localStorage.getItem(STORAGE_DAYS);
+        return data ? JSON.parse(data) : {};
+      } catch(e) { 
+        console.error('Load error:', e);
+        return {}; 
+      }
+    }
+
+    function saveAllDays(daysObj) {
+      try {
+        localStorage.setItem(STORAGE_DAYS, JSON.stringify(daysObj));
+      } catch(e) {
+        console.error('Save error:', e);
+      }
+    }
+
+    function getDataForDate(dateStr) {
+      const days = loadAllDays();
+      return days[dateStr] || { sales: [], expenses: [] };
+    }
+
+    function updateTodayData(updater) {
+      const days = loadAllDays();
+      const key = TODAY_KEY();
+      if (!days[key]) days[key] = { sales: [], expenses: [] };
+      updater(days[key]);
+      saveAllDays(days);
+    }
+
+    function updateDateData(dateStr, updater) {
+      const days = loadAllDays();
+      if (!days[dateStr]) days[dateStr] = { sales: [], expenses: [] };
+      updater(days[dateStr]);
+      saveAllDays(days);
+    }
+
+    function renderFishPrices() {
+      const container = document.getElementById('fishPriceContainer');
+      container.innerHTML = fishPrices.map(price => {
+        const sel = (selectedItem && selectedItem.type === 'fish' && selectedItem.price === price) ? 'selected' : '';
+        return `<button class="fish-btn ${sel}" data-fish="${price}">${price}/=</button>`;
+      }).join('');
+    }
+
+    function renderOtherItems() {
+      const container = document.getElementById('otherItemsContainer');
+      container.innerHTML = otherItems.map(item => {
+        const sel = (selectedItem && selectedItem.type === 'other' && selectedItem.name === item.name) ? 'selected' : '';
+        return `<button class="fish-btn ${sel}" data-other-name="${item.name.replace(/'/g, "&#39;")}" data-other-price="${item.price}">${item.name} ${item.price}/=</button>`;
+      }).join('');
+    }
+
+    function updateSelectedLabel() {
+      const label = document.getElementById('selectedItemLabel');
+      if (selectedItem) {
+        label.textContent = selectedItem.type === 'fish' ? `Fish ${selectedItem.price}/=` : `${selectedItem.name} ${selectedItem.price}/=`;
+      } else {
+        label.textContent = 'No item';
+      }
+    }
+
+    function renderHistory() {
+      const data = getDataForDate(currentViewDate);
+      document.getElementById('historyDateLabel').textContent = currentViewDate;
+      
+      const salesDiv = document.getElementById('salesList');
+      if (data.sales.length === 0) {
+        salesDiv.innerHTML = '<div style="color:#999; padding:6px;">No sales</div>';
+      } else {
+        salesDiv.innerHTML = data.sales.map((s, i) => 
+          `<div class="list-item">
+            <div class="list-item-content">
+              <span>${s.name} x${s.qty} @${s.price}/=</span>
+              <strong>${s.total}/=</strong>
+            </div>
+            <button class="delete-btn" data-type="sale" data-index="${i}" title="Delete sale">✕</button>
+          </div>`
+        ).join('');
+      }
+
+      const expDiv = document.getElementById('expensesList');
+      if (data.expenses.length === 0) {
+        expDiv.innerHTML = '<div style="color:#999; padding:6px;">No expenses</div>';
+      } else {
+        expDiv.innerHTML = data.expenses.map((e, i) => 
+          `<div class="list-item">
+            <div class="list-item-content">
+              <span>${e.name}</span>
+              <strong>${e.amount}/=</strong>
+            </div>
+            <button class="delete-btn" data-type="expense" data-index="${i}" title="Delete expense">✕</button>
+          </div>`
+        ).join('');
+      }
+    }
+
+    function computeTotals() {
+      const data = getDataForDate(currentViewDate);
+      const salesTotal = data.sales.reduce((s, sale) => s + sale.total, 0);
+      const expTotal = data.expenses.reduce((s, e) => s + e.amount, 0);
+      document.getElementById('totalSalesDisplay').textContent = salesTotal;
+      document.getElementById('totalExpensesDisplay').textContent = expTotal;
+      document.getElementById('cashAtHandDisplay').textContent = salesTotal - expTotal;
+    }
+
+    function refreshUI() {
+      renderFishPrices();
+      renderOtherItems();
+      updateSelectedLabel();
+      renderHistory();
+      computeTotals();
+      document.getElementById('currentDateDisplay').textContent = currentViewDate;
+      updateGraphs();
+    }
+
+    function selectFish(price) {
+      selectedItem = { type: 'fish', price, name: `Fish ${price}/=` };
+      refreshUI();
+    }
+
+    function selectOther(name, price) {
+      selectedItem = { type: 'other', name, price };
+      refreshUI();
+    }
+
+    function addSale() {
+      if (!selectedItem) { 
+        alert('Select an item first.'); 
+        return; 
+      }
+      const qty = parseInt(document.getElementById('globalQty').value) || 1;
+      if (qty < 1) return;
+      
+      updateTodayData(day => day.sales.push({
+        name: selectedItem.name,
+        price: selectedItem.price,
+        qty,
+        total: selectedItem.price * qty,
+        time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true})
+      }));
+      
+      document.getElementById('globalQty').value = 1;
+      refreshUI();
+    }
+
+    function addExpense() {
+      const name = document.getElementById('expenseName').value.trim();
+      const amount = parseInt(document.getElementById('expenseAmount').value);
+      if (!name || !amount || amount < 1) { 
+        alert('Enter valid name and amount.'); 
+        return; 
+      }
+      
+      updateTodayData(day => day.expenses.push({
+        name,
+        amount,
+        time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true})
+      }));
+      
+      document.getElementById('expenseName').value = '';
+      document.getElementById('expenseAmount').value = '';
+      refreshUI();
+    }
+
+    function deleteSale(index) {
+      if (confirm('Delete this sale entry?')) {
+        updateDateData(currentViewDate, day => {
+          day.sales.splice(index, 1);
+        });
+        refreshUI();
+      }
+    }
+
+    function deleteExpense(index) {
+      if (confirm('Delete this expense entry?')) {
+        updateDateData(currentViewDate, day => {
+          day.expenses.splice(index, 1);
+        });
+        refreshUI();
+      }
+    }
+
+    function searchHistory() {
+      const val = document.getElementById('historySearch').value.trim();
+      currentViewDate = val || TODAY_KEY();
+      refreshUI();
+    }
+
+    function generatePDF() {
+      const data = getDataForDate(currentViewDate);
+      const salesTotal = data.sales.reduce((s, sale) => s + sale.total, 0);
+      const expTotal = data.expenses.reduce((s, e) => s + e.amount, 0);
+      
+      // Create a visible temporary container
+      const pdfContainer = document.createElement('div');
+      pdfContainer.id = 'pdfTempContainer';
+      pdfContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        z-index: 99999;
+        padding: 15mm;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #000;
+        overflow: visible;
+      `;
+      
+      pdfContainer.innerHTML = `
+        <div style="max-width: 180mm; margin: 0 auto;">
+          <h1 style="color: #0b3954; font-size: 24px; margin-bottom: 5px;">🐟 FishFlow Report</h1>
+          <p style="font-size: 14px; margin-bottom: 15px;"><strong>Date:</strong> ${currentViewDate}</p>
+          <hr style="border: 2px solid #0b3954; margin-bottom: 15px;">
+          
+          <h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Sales (Total: Ksh ${salesTotal})</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+            <thead>
+              <tr style="background: #f0f5fb;">
+                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #0b3954;">Item</th>
+                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #0b3954;">Qty</th>
+                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Price</th>
+                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.sales.length > 0 ? data.sales.map(s => `
+                <tr>
+                  <td style="padding: 6px 8px; border-bottom: 1px solid #ddd;">${s.name}</td>
+                  <td style="padding: 6px 8px; text-align: center; border-bottom: 1px solid #ddd;">${s.qty}</td>
+                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;">${s.price}/=</td>
+                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;"><strong>${s.total}/=</strong></td>
+                </tr>
+              `).join('') : '<tr><td colspan="4" style="padding: 10px; text-align: center; color: #999;">No sales recorded</td></tr>'}
+              ${data.sales.length > 0 ? `
+                <tr style="font-weight: bold; background: #f8fafd;">
+                  <td colspan="3" style="padding: 8px; text-align: right;">Total Sales</td>
+                  <td style="padding: 8px; text-align: right;"><strong>${salesTotal}/=</strong></td>
+                </tr>
+              ` : ''}
+            </tbody>
+          </table>
+          
+          <h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Expenses (Total: Ksh ${expTotal})</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+            <thead>
+              <tr style="background: #f0f5fb;">
+                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #0b3954;">Expense</th>
+                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.expenses.length > 0 ? data.expenses.map(e => `
+                <tr>
+                  <td style="padding: 6px 8px; border-bottom: 1px solid #ddd;">${e.name}</td>
+                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;"><strong>${e.amount}/=</strong></td>
+                </tr>
+              `).join('') : '<tr><td colspan="2" style="padding: 10px; text-align: center; color: #999;">No expenses recorded</td></tr>'}
+              ${data.expenses.length > 0 ? `
+                <tr style="font-weight: bold; background: #f8fafd;">
+                  <td style="padding: 8px; text-align: right;">Total Expenses</td>
+                  <td style="padding: 8px; text-align: right;"><strong>${expTotal}/=</strong></td>
+                </tr>
+              ` : ''}
+            </tbody>
+          </table>
+          
+          <hr style="border: 2px solid #0b3954; margin-bottom: 15px;">
+          <h2 style="color: #0b3954; font-size: 20px;">Cash at Hand: Ksh ${salesTotal - expTotal}</h2>
+        </div>
+      `;
+      
+      document.body.appendChild(pdfContainer);
+      
+      // Configure html2pdf options
+      const opt = {
+        margin: 0,
+        filename: `FishFlow_${currentViewDate}.pdf`,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          letterRendering: true,
+          windowWidth: pdfContainer.offsetWidth,
+          windowHeight: pdfContainer.offsetHeight
+        },
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'portrait' 
+        }
+      };
+      
+      // Generate PDF
+      html2pdf().set(opt).from(pdfContainer).save().then(() => {
+        // Clean up after successful generation
+        if (document.getElementById('pdfTempContainer')) {
+          document.body.removeChild(pdfContainer);
+        }
+      }).catch((error) => {
+        console.error('PDF Error:', error);
+        if (document.getElementById('pdfTempContainer')) {
+          document.body.removeChild(pdfContainer);
+        }
+        alert('PDF generation failed. Please try again.');
+      });
+    }
+
+    // Graphs
+    let hourlyChart, dailyChart;
+    function updateGraphs() {
+      const days = loadAllDays();
+      const dayKeys = Object.keys(days).sort().slice(-7);
+      
+      const hourTotals = Array(24).fill(0);
+      dayKeys.forEach(k => {
+        days[k].sales.forEach(s => {
+          if (s.time) {
+            const timeParts = s.time.match(/(\d+)/);
+            if (timeParts) {
+              let h = parseInt(timeParts[1]);
+              if (s.time.includes('PM') && h !== 12) h += 12;
+              if (s.time.includes('AM') && h === 12) h = 0;
+              hourTotals[Math.min(h, 23)] += s.total;
+            }
+          }
+        });
+      });
+      
+      const ctx1 = document.getElementById('hourlyChart').getContext('2d');
+      if (hourlyChart) hourlyChart.destroy();
+      hourlyChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: Array.from({length:24}, (_,i) => `${i}:00`),
+          datasets: [{ 
+            label: 'Sales (Ksh)', 
+            data: hourTotals, 
+            backgroundColor: '#0b3954aa',
+            borderRadius: 4
+          }]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+
+      const dailySales = dayKeys.map(k => days[k].sales.reduce((s, sale) => s + sale.total, 0));
+      const ctx2 = document.getElementById('dailyChart').getContext('2d');
+      if (dailyChart) dailyChart.destroy();
+      dailyChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: dayKeys,
+          datasets: [{ 
+            label: 'Daily Sales (Ksh)', 
+            data: dailySales, 
+            borderColor: '#1e4a6b',
+            backgroundColor: 'rgba(30,74,107,0.1)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true 
+        }
+      });
+    }
+
+    // Event bindings
+    document.getElementById('fishPriceContainer').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const price = btn.dataset.fish;
+      if (price) selectFish(Number(price));
+    });
+    
+    document.getElementById('otherItemsContainer').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const name = btn.dataset.otherName;
+      const price = btn.dataset.otherPrice;
+      if (name && price) selectOther(name, Number(price));
+    });
+    
+    document.getElementById('addItemBtn').addEventListener('click', addSale);
+    document.getElementById('addExpenseBtn').addEventListener('click', addExpense);
+    document.getElementById('searchHistoryBtn').addEventListener('click', searchHistory);
+    document.getElementById('printDayBtn').addEventListener('click', generatePDF);
+    
+    document.getElementById('historySearch').addEventListener('keypress', e => {
+      if (e.key === 'Enter') searchHistory();
+    });
+
+    // Delete handlers
+    document.getElementById('salesList').addEventListener('click', e => {
+      const btn = e.target.closest('.delete-btn');
+      if (btn && btn.dataset.type === 'sale') {
+        deleteSale(parseInt(btn.dataset.index));
+      }
+    });
+    
+    document.getElementById('expensesList').addEventListener('click', e => {
+      const btn = e.target.closest('.delete-btn');
+      if (btn && btn.dataset.type === 'expense') {
+        deleteExpense(parseInt(btn.dataset.index));
+      }
+    });
+
+    // Initialize
+    refreshUI();
+  })();
+</script>
+</body>
+</html>
