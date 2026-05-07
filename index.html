@@ -373,7 +373,7 @@
 
 <script>
   (function() {
-    const STORAGE_DAYS = 'fishflow_days_v2';
+    const STORAGE_DAYS = 'fishflow_days_v4';
     const TODAY_KEY = () => getLocalDateString();
 
     const fishPrices = [200,250,300,350,400,450,500,550,600,650,700,750,800,850,900];
@@ -455,7 +455,7 @@
       const container = document.getElementById('otherItemsContainer');
       container.innerHTML = otherItems.map(item => {
         const sel = (selectedItem && selectedItem.type === 'other' && selectedItem.name === item.name) ? 'selected' : '';
-        return `<button class="fish-btn ${sel}" data-other-name="${item.name.replace(/'/g, "&#39;")}" data-other-price="${item.price}">${item.name} ${item.price}/=</button>`;
+        return `<button class="fish-btn ${sel}" data-other-name="${item.name}" data-other-price="${item.price}">${item.name} ${item.price}/=</button>`;
       }).join('');
     }
 
@@ -600,119 +600,80 @@
       const salesTotal = data.sales.reduce((s, sale) => s + sale.total, 0);
       const expTotal = data.expenses.reduce((s, e) => s + e.amount, 0);
       
-      // Create a visible temporary container
-      const pdfContainer = document.createElement('div');
-      pdfContainer.id = 'pdfTempContainer';
-      pdfContainer.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 210mm;
-        min-height: 297mm;
-        background: white;
-        z-index: 99999;
-        padding: 15mm;
-        font-family: Arial, Helvetica, sans-serif;
-        color: #000;
-        overflow: visible;
-      `;
+      // Create a simple, clean PDF content
+      const pdfContent = document.createElement('div');
+      pdfContent.style.cssText = 'padding: 20px; font-family: Arial, sans-serif; background: white; width: 700px;';
       
-      pdfContainer.innerHTML = `
-        <div style="max-width: 180mm; margin: 0 auto;">
-          <h1 style="color: #0b3954; font-size: 24px; margin-bottom: 5px;">🐟 FishFlow Report</h1>
-          <p style="font-size: 14px; margin-bottom: 15px;"><strong>Date:</strong> ${currentViewDate}</p>
-          <hr style="border: 2px solid #0b3954; margin-bottom: 15px;">
-          
-          <h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Sales (Total: Ksh ${salesTotal})</h2>
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
-            <thead>
-              <tr style="background: #f0f5fb;">
-                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #0b3954;">Item</th>
-                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #0b3954;">Qty</th>
-                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Price</th>
-                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.sales.length > 0 ? data.sales.map(s => `
-                <tr>
-                  <td style="padding: 6px 8px; border-bottom: 1px solid #ddd;">${s.name}</td>
-                  <td style="padding: 6px 8px; text-align: center; border-bottom: 1px solid #ddd;">${s.qty}</td>
-                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;">${s.price}/=</td>
-                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;"><strong>${s.total}/=</strong></td>
-                </tr>
-              `).join('') : '<tr><td colspan="4" style="padding: 10px; text-align: center; color: #999;">No sales recorded</td></tr>'}
-              ${data.sales.length > 0 ? `
-                <tr style="font-weight: bold; background: #f8fafd;">
-                  <td colspan="3" style="padding: 8px; text-align: right;">Total Sales</td>
-                  <td style="padding: 8px; text-align: right;"><strong>${salesTotal}/=</strong></td>
-                </tr>
-              ` : ''}
-            </tbody>
-          </table>
-          
-          <h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Expenses (Total: Ksh ${expTotal})</h2>
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
-            <thead>
-              <tr style="background: #f0f5fb;">
-                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #0b3954;">Expense</th>
-                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #0b3954;">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.expenses.length > 0 ? data.expenses.map(e => `
-                <tr>
-                  <td style="padding: 6px 8px; border-bottom: 1px solid #ddd;">${e.name}</td>
-                  <td style="padding: 6px 8px; text-align: right; border-bottom: 1px solid #ddd;"><strong>${e.amount}/=</strong></td>
-                </tr>
-              `).join('') : '<tr><td colspan="2" style="padding: 10px; text-align: center; color: #999;">No expenses recorded</td></tr>'}
-              ${data.expenses.length > 0 ? `
-                <tr style="font-weight: bold; background: #f8fafd;">
-                  <td style="padding: 8px; text-align: right;">Total Expenses</td>
-                  <td style="padding: 8px; text-align: right;"><strong>${expTotal}/=</strong></td>
-                </tr>
-              ` : ''}
-            </tbody>
-          </table>
-          
-          <hr style="border: 2px solid #0b3954; margin-bottom: 15px;">
-          <h2 style="color: #0b3954; font-size: 20px;">Cash at Hand: Ksh ${salesTotal - expTotal}</h2>
-        </div>
-      `;
+      let html = '<div style="padding: 20px;">';
+      html += '<h1 style="color: #0b3954; font-size: 22px; margin-bottom: 5px;">FishFlow Report</h1>';
+      html += '<p style="font-size: 14px; margin-bottom: 15px;"><strong>Date:</strong> ' + currentViewDate + '</p>';
+      html += '<hr style="border: 1px solid #0b3954; margin-bottom: 20px;">';
       
-      document.body.appendChild(pdfContainer);
+      // Sales section
+      html += '<h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Sales (Total: Ksh ' + salesTotal + ')</h2>';
+      html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+      html += '<tr style="background: #f0f5fb;"><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Item</th><th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Qty</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Price</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total</th></tr>';
       
-      // Configure html2pdf options
-      const opt = {
-        margin: 0,
-        filename: `FishFlow_${currentViewDate}.pdf`,
-        image: { type: 'jpeg', quality: 1 },
+      if (data.sales.length > 0) {
+        data.sales.forEach(s => {
+          html += '<tr>';
+          html += '<td style="padding: 6px 8px; border: 1px solid #ddd;">' + s.name + '</td>';
+          html += '<td style="padding: 6px 8px; text-align: center; border: 1px solid #ddd;">' + s.qty + '</td>';
+          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;">' + s.price + '/=</td>';
+          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;"><strong>' + s.total + '/=</strong></td>';
+          html += '</tr>';
+        });
+        html += '<tr style="font-weight: bold; background: #f8fafd;"><td colspan="3" style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total Sales</td><td style="padding: 8px; text-align: right; border: 1px solid #ddd;"><strong>' + salesTotal + '/=</strong></td></tr>';
+      } else {
+        html += '<tr><td colspan="4" style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #999;">No sales recorded</td></tr>';
+      }
+      html += '</table>';
+      
+      // Expenses section
+      html += '<h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px; margin-top: 20px;">Expenses (Total: Ksh ' + expTotal + ')</h2>';
+      html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+      html += '<tr style="background: #f0f5fb;"><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Expense</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Amount</th></tr>';
+      
+      if (data.expenses.length > 0) {
+        data.expenses.forEach(e => {
+          html += '<tr>';
+          html += '<td style="padding: 6px 8px; border: 1px solid #ddd;">' + e.name + '</td>';
+          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;"><strong>' + e.amount + '/=</strong></td>';
+          html += '</tr>';
+        });
+        html += '<tr style="font-weight: bold; background: #f8fafd;"><td style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total Expenses</td><td style="padding: 8px; text-align: right; border: 1px solid #ddd;"><strong>' + expTotal + '/=</strong></td></tr>';
+      } else {
+        html += '<tr><td colspan="2" style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #999;">No expenses recorded</td></tr>';
+      }
+      html += '</table>';
+      
+      html += '<hr style="border: 1px solid #0b3954; margin: 20px 0;">';
+      html += '<h2 style="color: #0b3954; font-size: 20px;">Cash at Hand: Ksh ' + (salesTotal - expTotal) + '</h2>';
+      html += '</div>';
+      
+      pdfContent.innerHTML = html;
+      document.body.appendChild(pdfContent);
+      
+      // Generate PDF immediately
+      html2pdf().set({
+        margin: 10,
+        filename: 'FishFlow_' + currentViewDate + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
           scale: 2,
           useCORS: true,
-          logging: false,
-          letterRendering: true,
-          windowWidth: pdfContainer.offsetWidth,
-          windowHeight: pdfContainer.offsetHeight
+          logging: false
         },
         jsPDF: { 
           unit: 'mm', 
           format: 'a4', 
           orientation: 'portrait' 
         }
-      };
-      
-      // Generate PDF
-      html2pdf().set(opt).from(pdfContainer).save().then(() => {
-        // Clean up after successful generation
-        if (document.getElementById('pdfTempContainer')) {
-          document.body.removeChild(pdfContainer);
-        }
-      }).catch((error) => {
-        console.error('PDF Error:', error);
-        if (document.getElementById('pdfTempContainer')) {
-          document.body.removeChild(pdfContainer);
-        }
+      }).from(pdfContent).save().then(() => {
+        document.body.removeChild(pdfContent);
+      }).catch(err => {
+        console.error('PDF Error:', err);
+        document.body.removeChild(pdfContent);
         alert('PDF generation failed. Please try again.');
       });
     }
