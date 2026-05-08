@@ -16,7 +16,7 @@
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
     body {
-      background: #f0f4f8;
+      background: #eef2f6;
       min-height: 100vh;
     }
     .app-container {
@@ -25,93 +25,100 @@
       background: white;
       min-height: 100vh;
       position: relative;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
     }
     .top-nav {
       background: #0b3954;
       color: white;
-      padding: 8px 4px;
+      padding: 6px 2px;
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-      gap: 2px;
+      gap: 1px;
       position: sticky;
       top: 0;
       z-index: 20;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       color: #b0c7d9;
       cursor: pointer;
-      padding: 6px 8px;
+      padding: 5px 6px;
       border-radius: 10px;
       transition: 0.2s;
       background: none;
       border: none;
       font-weight: 500;
-      min-width: 55px;
+      min-width: 50px;
     }
     .nav-item.active {
       color: white;
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.18);
+      font-weight: 700;
     }
     .nav-icon {
-      font-size: 1.2rem;
-      margin-bottom: 2px;
+      font-size: 1.1rem;
+      margin-bottom: 1px;
     }
     .topbar-info {
-      background: #0a2f45;
-      color: #e0edf5;
-      padding: 8px 16px;
+      background: #092d42;
+      color: #d0e0ed;
+      padding: 6px 16px;
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
     }
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      padding: 12px 16px;
+      gap: 6px;
+      padding: 10px 14px;
     }
     .stat-card {
       background: #f8fafd;
-      border-radius: 14px;
-      padding: 12px 8px;
+      border-radius: 12px;
+      padding: 10px 6px;
       text-align: center;
       border: 1px solid #e9f0f5;
     }
     .stat-label {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       text-transform: uppercase;
       color: #6b7d8e;
       letter-spacing: 0.3px;
     }
     .stat-value {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #0b3954;
     }
+    .stat-highlight {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1e4a6b;
+    }
     .panel {
       display: none;
-      padding: 16px;
+      padding: 14px;
       animation: fadeIn 0.2s ease;
     }
     .panel.active {
       display: block;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .card {
       background: #f8fafd;
       border-radius: 16px;
       padding: 14px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border: 1px solid #eef2f6;
     }
     .btn {
@@ -120,42 +127,26 @@
       border: none;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       transition: 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn-primary {
-      background: #0b3954;
-      color: white;
-    }
-    .btn-outline {
-      background: white;
-      border: 1px solid #0b3954;
-      color: #0b3954;
-    }
-    .btn-danger {
-      background: #dc3545;
-      color: white;
-    }
-    .btn-success {
-      background: #10b981;
-      color: white;
-    }
-    .btn-sm {
-      padding: 5px 10px;
-      font-size: 0.7rem;
-    }
+    .btn-primary { background: #0b3954; color: white; }
+    .btn-outline { background: white; border: 1px solid #0b3954; color: #0b3954; }
+    .btn-danger { background: #dc3545; color: white; }
+    .btn-success { background: #10b981; color: white; }
+    .btn-sm { padding: 5px 10px; font-size: 0.68rem; }
     .item-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 4px;
     }
     .item-chip {
-      padding: 6px 12px;
-      border-radius: 18px;
+      padding: 6px 11px;
+      border-radius: 16px;
       background: #f0f5fb;
       border: 1px solid #d9e2ec;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       cursor: pointer;
       font-weight: 500;
       transition: 0.15s;
@@ -166,24 +157,17 @@
       color: white;
       border-color: #0b3954;
     }
-    .badge {
-      background: #0b3954;
-      color: white;
-      border-radius: 20px;
-      padding: 2px 10px;
-      font-size: 0.7rem;
-    }
     input, select {
-      padding: 10px;
+      padding: 9px;
       border-radius: 12px;
       border: 1px solid #d0d9e4;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       width: 100%;
-      margin: 4px 0;
+      margin: 3px 0;
     }
     .flex-row {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -191,40 +175,48 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 0;
+      padding: 5px 0;
       border-bottom: 1px solid #eee;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
     }
     .trash-item {
       background: #fff5f5;
       border-radius: 10px;
       padding: 10px;
-      margin: 6px 0;
-      font-size: 0.75rem;
+      margin: 5px 0;
+      font-size: 0.73rem;
       border: 1px solid #fdd;
     }
     .receipt-card {
       background: white;
       border-radius: 12px;
-      padding: 12px;
-      margin: 8px 0;
+      padding: 10px;
+      margin: 6px 0;
       border: 1px solid #e2e8f0;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
     }
     .payment-badge {
       display: inline-block;
-      padding: 3px 8px;
+      padding: 2px 8px;
       border-radius: 10px;
-      font-size: 0.65rem;
-      font-weight: 600;
+      font-size: 0.62rem;
+      font-weight: 700;
     }
     .cash-badge { background: #dcfce7; color: #166534; }
     .mpesa-badge { background: #dbeafe; color: #1e40af; }
+    .mixed-badge { background: #fef3c7; color: #92400e; }
     .section-title {
       font-weight: 700;
-      font-size: 0.9rem;
-      margin: 8px 0;
+      font-size: 0.85rem;
+      margin: 6px 0;
       color: #1e4a6b;
+    }
+    .fish-count-card {
+      background: linear-gradient(135deg, #e8f4f8, #f0f7fb);
+      border-radius: 12px;
+      padding: 10px;
+      margin: 4px 0;
+      border: 1px solid #d4e8f0;
     }
   </style>
 </head>
@@ -243,17 +235,32 @@
   <!-- Info bar -->
   <div class="topbar-info">
     <span id="topDate"></span>
-    <span>🕘 9:30AM–10:45PM</span>
+    <span>🕘 9:30AM – 10:45PM</span>
   </div>
 
-  <!-- Dashboard Summary (visible on all panels) -->
+  <!-- Dashboard Summary -->
   <div class="dashboard-grid" id="dashboardSummary">
-    <div class="stat-card"><div class="stat-label">💰 Sales</div><div class="stat-value" id="totalSalesDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">💰 Total Sales</div><div class="stat-value" id="totalSalesDisplay">0</div></div>
     <div class="stat-card"><div class="stat-label">🧾 Expenses</div><div class="stat-value" id="totalExpensesDisplay">0</div></div>
-    <div class="stat-card"><div class="stat-label">💵 Cash</div><div class="stat-value" id="cashAtHandDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">💵 Cash at Hand</div><div class="stat-value" id="cashAtHandDisplay">0</div></div>
     <div class="stat-card"><div class="stat-label">📱 M-Pesa</div><div class="stat-value" id="mpesaTotalDisplay">0</div></div>
     <div class="stat-card"><div class="stat-label">💳 Cash Txns</div><div class="stat-value" id="cashTxnsDisplay">0</div></div>
     <div class="stat-card"><div class="stat-label">📋 Outstanding</div><div class="stat-value" id="outstandingDisplay">0</div></div>
+    <div class="stat-card">
+      <div class="stat-label">🐟 Fish Pcs (Cash)</div>
+      <div class="stat-value" id="fishCashPcsDisplay">0</div>
+      <div class="stat-highlight" id="fishCashAmtDisplay">0/=</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">🐟 Fish Pcs (M-Pesa)</div>
+      <div class="stat-value" id="fishMpesaPcsDisplay">0</div>
+      <div class="stat-highlight" id="fishMpesaAmtDisplay">0/=</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">🐟 Total Fish Pcs</div>
+      <div class="stat-value" id="fishTotalPcsDisplay">0</div>
+      <div class="stat-highlight" id="fishTotalAmtDisplay">0/=</div>
+    </div>
   </div>
 
   <!-- PANELS -->
@@ -284,7 +291,7 @@
 
   <div id="panel-trash" class="panel">
     <h3 style="margin-bottom:10px;">🗑️ Trash Bin</h3>
-    <p style="font-size:0.75rem; color:#888;">Deleted items appear here. Restore or permanently delete.</p>
+    <p style="font-size:0.73rem; color:#888;">Deleted items appear here. Restore or permanently delete.</p>
     <div id="trashContainer"></div>
     <button class="btn btn-danger" style="margin-top:12px; width:100%;" onclick="emptyTrash()">🗑️ Permanently Delete All</button>
   </div>
@@ -311,16 +318,20 @@
   <div id="panel-analysis" class="panel">
     <h3 style="margin-bottom:10px;">📈 Analysis</h3>
     <div class="card">
+      <strong>🐟 Fish Piece Counts (Today)</strong>
+      <div id="fishCountSummary" style="margin-top:6px;"></div>
+    </div>
+    <div class="card">
       <strong>🐟 Fish Type Sales (Today)</strong>
-      <canvas id="fishTypeChart" height="180"></canvas>
+      <canvas id="fishTypeChart" height="160"></canvas>
     </div>
     <div class="card">
       <strong>⏰ Hourly Cash Flow (This Week)</strong>
-      <canvas id="hourlyChart" height="180"></canvas>
+      <canvas id="hourlyChart" height="160"></canvas>
     </div>
     <div class="card">
       <strong>📊 Daily Comparison (7 Days)</strong>
-      <canvas id="dailyChart" height="180"></canvas>
+      <canvas id="dailyChart" height="160"></canvas>
     </div>
   </div>
 </div>
@@ -353,7 +364,6 @@
     let selectedItems = [];
     let currentOrderTotal = 0;
     let pendingOrder = null;
-    let currentPanel = 'takeaway';
     
     // Default data
     let fishPrices = [200,250,300,350,400,450,500,550,600,650,700,750,800,850,900];
@@ -365,7 +375,7 @@
     ];
 
     function loadData() {
-      const saved = localStorage.getItem('fishflow_pro_v2');
+      const saved = localStorage.getItem('fishflow_pro_v3');
       if (saved) {
         const d = JSON.parse(saved);
         if (d.fishPrices) fishPrices = d.fishPrices;
@@ -373,28 +383,55 @@
       }
     }
     function saveData() {
-      localStorage.setItem('fishflow_pro_v2', JSON.stringify({ fishPrices, otherItems }));
+      localStorage.setItem('fishflow_pro_v3', JSON.stringify({ fishPrices, otherItems }));
     }
 
     function getToday() { return new Date().toISOString().split('T')[0]; }
     
     function getTransactions() {
-      return JSON.parse(localStorage.getItem('transactions_v2') || '{}');
+      return JSON.parse(localStorage.getItem('transactions_v3') || '{}');
     }
     function saveTransactions(t) {
-      localStorage.setItem('transactions_v2', JSON.stringify(t));
+      localStorage.setItem('transactions_v3', JSON.stringify(t));
     }
     function getExpenses() {
-      return JSON.parse(localStorage.getItem('expenses_v2') || '{}');
+      return JSON.parse(localStorage.getItem('expenses_v3') || '{}');
     }
     function saveExpenses(e) {
-      localStorage.setItem('expenses_v2', JSON.stringify(e));
+      localStorage.setItem('expenses_v3', JSON.stringify(e));
     }
     function getTrash() {
-      return JSON.parse(localStorage.getItem('trash_v2') || '[]');
+      return JSON.parse(localStorage.getItem('trash_v3') || '[]');
     }
     function saveTrash(t) {
-      localStorage.setItem('trash_v2', JSON.stringify(t));
+      localStorage.setItem('trash_v3', JSON.stringify(t));
+    }
+
+    // Count fish pieces by payment method
+    function countFishPcs(transactions) {
+      let cashPcs = 0, mpesaPcs = 0, cashAmt = 0, mpesaAmt = 0;
+      transactions.forEach(t => {
+        const fishItems = t.items.filter(i => i.name.includes('Fish'));
+        const fishPcs = fishItems.reduce((s, i) => s + i.qty, 0);
+        const fishAmt = fishItems.reduce((s, i) => s + (i.price * i.qty), 0);
+        
+        if (t.method === 'cash') {
+          cashPcs += fishPcs;
+          cashAmt += fishAmt;
+        } else if (t.method === 'mpesa') {
+          mpesaPcs += fishPcs;
+          mpesaAmt += fishAmt;
+        } else if (t.method === 'partial') {
+          // Proportional split based on payment amounts
+          const cashRatio = t.cashAmt / t.total;
+          const mpesaRatio = t.mpesaAmt / t.total;
+          cashPcs += Math.round(fishPcs * cashRatio);
+          mpesaPcs += Math.round(fishPcs * mpesaRatio);
+          cashAmt += Math.round(fishAmt * cashRatio);
+          mpesaAmt += Math.round(fishAmt * mpesaRatio);
+        }
+      });
+      return { cashPcs, mpesaPcs, totalPcs: cashPcs + mpesaPcs, cashAmt, mpesaAmt, totalAmt: cashAmt + mpesaAmt };
     }
 
     function renderAllItems() {
@@ -606,12 +643,16 @@
       const list = trans[today] || [];
       document.getElementById('receiptContainer').innerHTML = list.length === 0 ?
         '<p style="color:#999;">No receipts today</p>' :
-        list.map((t, i) => `
+        list.map((t, i) => {
+          const fishItems = t.items.filter(it => it.name.includes('Fish'));
+          const fishPcs = fishItems.reduce((s, it) => s + it.qty, 0);
+          return `
           <div class="receipt-card">
             <strong>🧾 Receipt #${i+1}</strong> | ${t.time}
-            <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : 'cash-badge'}">
+            <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : t.method === 'partial' ? 'mixed-badge' : 'cash-badge'}">
               ${t.method === 'mpesa' ? '📱 M-Pesa' : t.method === 'cash' ? '💵 Cash' : '💳 Mixed'}
             </span>
+            ${fishPcs > 0 ? `<span style="font-size:0.65rem; margin-left:4px;">🐟×${fishPcs}</span>` : ''}
             <div style="margin-top:6px;">
               ${t.items.map(it => `<div>• ${it.name} x${it.qty} = ${it.price*it.qty}/=</div>`).join('')}
             </div>
@@ -620,7 +661,7 @@
             ${t.method === 'partial' ? `<br><small>Cash: ${t.cashAmt}/= | M-Pesa: ${t.mpesaAmt}/=</small>` : ''}
             <br><button class="btn btn-danger btn-sm" style="margin-top:6px;" onclick="deleteReceipt(${i})">🗑️ Delete</button>
           </div>
-        `).join('');
+        `}).join('');
     }
 
     window.deleteReceipt = (i) => {
@@ -653,20 +694,25 @@
       
       const salesTotal = sales.reduce((s, t) => s + t.total, 0);
       const expTotal = expenses.reduce((s, e) => s + e.amount, 0);
-      const cashTotal = sales.reduce((s, t) => s + (t.cashAmt || 0), 0);
-      const mpesaTotal = sales.reduce((s, t) => s + (t.mpesaAmt || 0), 0);
+      const cashTotal = sales.reduce((s, t) => s + (t.cashAmt || (t.method === 'cash' ? t.total : 0)), 0);
+      const mpesaTotal = sales.reduce((s, t) => s + (t.mpesaAmt || (t.method === 'mpesa' ? t.total : 0)), 0);
+      
+      const fishCounts = countFishPcs(sales);
       
       let html = `<div class="card">
         <strong>Summary for ${date}</strong><br>
         💰 Sales: ${salesTotal}/= | 📱 M-Pesa: ${mpesaTotal}/= | 💵 Cash: ${cashTotal}/=<br>
+        🐟 Fish Pcs: Cash ${fishCounts.cashPcs} | M-Pesa ${fishCounts.mpesaPcs} | <strong>Total ${fishCounts.totalPcs}</strong><br>
         🧾 Expenses: ${expTotal}/= | 💵 Cash at Hand: ${cashTotal - expTotal}/=
       </div>`;
       
       html += `<h4 style="margin-top:12px;">Sales</h4>`;
       if (sales.length === 0) html += '<p style="color:#999;">No sales</p>';
       else sales.forEach((t, i) => {
+        const fPcs = t.items.filter(it => it.name.includes('Fish')).reduce((s, it) => s + it.qty, 0);
         html += `<div class="receipt-card">
-          #${i+1} | ${t.time} | <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : 'cash-badge'}">${t.method}</span>
+          #${i+1} | ${t.time} | <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : t.method === 'partial' ? 'mixed-badge' : 'cash-badge'}">${t.method}</span>
+          ${fPcs > 0 ? ` 🐟×${fPcs}` : ''}
           <br>${t.items.map(it => `${it.name} x${it.qty}`).join(', ')}
           <br><strong>${t.total}/=</strong>
         </div>`;
@@ -724,12 +770,22 @@
       const cashAmt = sales.reduce((s, t) => s + (t.cashAmt || (t.method === 'cash' ? t.total : 0)), 0);
       const mpesaAmt = sales.reduce((s, t) => s + (t.mpesaAmt || (t.method === 'mpesa' ? t.total : 0)), 0);
       
+      const fishCounts = countFishPcs(sales);
+      
       document.getElementById('totalSalesDisplay').textContent = salesTotal;
       document.getElementById('totalExpensesDisplay').textContent = expTotal;
       document.getElementById('cashAtHandDisplay').textContent = cashAmt - expTotal;
       document.getElementById('mpesaTotalDisplay').textContent = mpesaAmt;
       document.getElementById('cashTxnsDisplay').textContent = cashAmt;
       document.getElementById('outstandingDisplay').textContent = salesTotal - cashAmt - mpesaAmt;
+      
+      // Fish piece counts
+      document.getElementById('fishCashPcsDisplay').textContent = fishCounts.cashPcs;
+      document.getElementById('fishCashAmtDisplay').textContent = fishCounts.cashAmt + '/=';
+      document.getElementById('fishMpesaPcsDisplay').textContent = fishCounts.mpesaPcs;
+      document.getElementById('fishMpesaAmtDisplay').textContent = fishCounts.mpesaAmt + '/=';
+      document.getElementById('fishTotalPcsDisplay').textContent = fishCounts.totalPcs;
+      document.getElementById('fishTotalAmtDisplay').textContent = fishCounts.totalAmt + '/=';
     }
 
     // Analysis
@@ -738,6 +794,17 @@
       const trans = getTransactions();
       const today = getToday();
       const sales = trans[today] || [];
+      
+      // Fish count summary
+      const fishCounts = countFishPcs(sales);
+      document.getElementById('fishCountSummary').innerHTML = `
+        <div class="fish-count-card">
+          <strong>🐟 Fish Pieces Sold Today</strong><br>
+          💵 Cash: <strong>${fishCounts.cashPcs} pcs</strong> (${fishCounts.cashAmt}/=)<br>
+          📱 M-Pesa: <strong>${fishCounts.mpesaPcs} pcs</strong> (${fishCounts.mpesaAmt}/=)<br>
+          📊 Total: <strong>${fishCounts.totalPcs} pcs</strong> (${fishCounts.totalAmt}/=)
+        </div>
+      `;
       
       // Fish type chart
       const fishCount = {};
@@ -752,10 +819,25 @@
       fishTypeChart = new Chart(ctx1, {
         type: 'bar',
         data: {
-          labels: Object.keys(fishCount).map(p => `${p}/=`),
-          datasets: [{ label: 'Qty Sold Today', data: Object.values(fishCount), backgroundColor: '#0b3954aa', borderRadius: 4 }]
+          labels: Object.keys(fishCount).sort((a,b) => a-b).map(p => `${p}/=`),
+          datasets: [{ 
+            label: 'Pcs Sold Today', 
+            data: Object.keys(fishCount).sort((a,b) => a-b).map(p => fishCount[p]), 
+            backgroundColor: '#0b3954aa', 
+            borderRadius: 4 
+          }]
         },
-        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true, 
+          plugins: { 
+            legend: { display: false },
+            title: { display: true, text: 'Fish Pieces by Price' }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Pieces' } }
+          }
+        }
       });
 
       // Hourly chart (week)
@@ -781,9 +863,19 @@
         type: 'bar',
         data: {
           labels: Array.from({length:24}, (_,i) => `${i}:00`),
-          datasets: [{ label: 'Sales (Ksh)', data: hourTotals, backgroundColor: '#1e4a6baa', borderRadius: 3 }]
+          datasets: [{ 
+            label: 'Sales (Ksh)', 
+            data: hourTotals, 
+            backgroundColor: '#1e4a6baa', 
+            borderRadius: 3 
+          }]
         },
-        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true, 
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
       });
 
       // Daily comparison
@@ -794,9 +886,20 @@
         type: 'line',
         data: {
           labels: allDays,
-          datasets: [{ label: 'Daily Sales', data: dailySales, borderColor: '#0b3954', backgroundColor: 'rgba(11,57,84,0.1)', tension: 0.3, fill: true }]
+          datasets: [{ 
+            label: 'Daily Sales (Ksh)', 
+            data: dailySales, 
+            borderColor: '#0b3954', 
+            backgroundColor: 'rgba(11,57,84,0.1)', 
+            tension: 0.3, 
+            fill: true 
+          }]
         },
-        options: { responsive: true, maintainAspectRatio: true }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: true,
+          scales: { y: { beginAtZero: true } }
+        }
       });
     }
 
@@ -806,7 +909,6 @@
       document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.getElementById('panel-' + panelName).classList.add('active');
-      currentPanel = panelName;
       
       if (panelName === 'bills') renderBills();
       if (panelName === 'trash') renderTrash();
@@ -827,7 +929,6 @@
     document.getElementById('topDate').textContent = getToday();
     document.getElementById('historyDate').value = getToday();
     
-    // Auto-refresh dashboard every 30 seconds
     setInterval(updateDashboard, 30000);
   })();
 </script>
