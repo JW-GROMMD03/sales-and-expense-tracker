@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Fish Shop • Sales & Expense Tracker</title>
+  <title>FishFlow Pro • Smart Shop Manager</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
@@ -13,83 +13,74 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
     body {
       background: #f0f4f8;
-      padding: 8px;
       min-height: 100vh;
     }
     .app-container {
       max-width: 600px;
       margin: 0 auto;
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
     }
-    .panel {
-      border-bottom: 1px solid #eef2f6;
-      padding: 14px 16px;
-    }
-    .panel:last-child {
-      border-bottom: none;
-    }
-    .panel-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #0b3954;
-    }
-    .panel-badge {
-      background: #e9f2fa;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-    .header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 12px 16px;
-      background: #fafbfc;
-      border-bottom: 1px solid #eef2f6;
-    }
-    h1 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #0b3954;
-    }
-    .date-badge {
+    .top-nav {
       background: #0b3954;
       color: white;
-      padding: 5px 12px;
-      border-radius: 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      padding: 8px 4px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 2px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    .shift-timer {
-      font-size: 0.7rem;
-      background: #fef9e7;
-      padding: 3px 10px;
-      border-radius: 12px;
-      color: #8b6c00;
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.6rem;
+      color: #b0c7d9;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 10px;
+      transition: 0.2s;
+      background: none;
+      border: none;
+      font-weight: 500;
+      min-width: 55px;
+    }
+    .nav-item.active {
+      color: white;
+      background: rgba(255,255,255,0.15);
+    }
+    .nav-icon {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+    .topbar-info {
+      background: #0a2f45;
+      color: #e0edf5;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 500;
     }
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
+      padding: 12px 16px;
     }
     .stat-card {
       background: #f8fafd;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 14px;
+      padding: 12px 8px;
       text-align: center;
       border: 1px solid #e9f0f5;
     }
@@ -100,692 +91,744 @@
       letter-spacing: 0.3px;
     }
     .stat-value {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #0b3954;
     }
-    .fish-grid {
+    .panel {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+    .panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card {
+      background: #f8fafd;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #eef2f6;
+    }
+    .btn {
+      padding: 8px 14px;
+      border-radius: 18px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary {
+      background: #0b3954;
+      color: white;
+    }
+    .btn-outline {
+      background: white;
+      border: 1px solid #0b3954;
+      color: #0b3954;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.7rem;
+    }
+    .item-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
-      margin-bottom: 6px;
     }
-    .fish-btn {
+    .item-chip {
+      padding: 6px 12px;
+      border-radius: 18px;
       background: #f0f5fb;
       border: 1px solid #d9e2ec;
-      border-radius: 16px;
-      padding: 5px 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: #153e59;
+      font-size: 0.75rem;
       cursor: pointer;
-      white-space: nowrap;
+      font-weight: 500;
       transition: 0.15s;
-      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
     }
-    .fish-btn:active {
-      transform: scale(0.95);
-    }
-    .fish-btn.selected {
+    .item-chip.selected {
       background: #0b3954;
       color: white;
       border-color: #0b3954;
     }
-    .other-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin: 6px 0;
-    }
-    .qty-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    .qty-input {
-      width: 50px;
-      padding: 6px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      text-align: center;
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-    .selected-badge {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #0b3954;
-      background: #e8f0fe;
-      padding: 4px 10px;
-      border-radius: 10px;
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .add-btn {
+    .badge {
       background: #0b3954;
       color: white;
-      border: none;
-      border-radius: 16px;
-      padding: 7px 14px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.7rem;
     }
-    .add-btn:active {
-      transform: scale(0.95);
+    input, select {
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #d0d9e4;
+      font-size: 0.85rem;
+      width: 100%;
+      margin: 4px 0;
     }
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 0.65rem;
-      cursor: pointer;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 6px;
-      flex-shrink: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .expense-row {
+    .flex-row {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
-    .expense-input {
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid #d0d9e4;
-      flex: 2;
-      min-width: 90px;
-      font-size: 0.8rem;
-    }
-    .amount-input {
-      padding: 8px;
-      border-radius: 12px;
-      border: 1px solid #d0d9e4;
-      width: 80px;
-      font-size: 0.8rem;
-    }
-    .history-lists {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    @media (min-width: 500px) {
-      .history-lists {
-        flex-direction: row;
-      }
-    }
-    .list-box {
-      background: #f9fcff;
-      border-radius: 12px;
-      padding: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #eaf0f6;
-      font-size: 0.75rem;
-      flex: 1;
-    }
     .list-item {
-      padding: 4px 0;
-      border-bottom: 1px solid #f0f0f0;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.78rem;
     }
-    .list-item-content {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-      flex-wrap: wrap;
-    }
-    .search-row {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 6px;
-      flex-wrap: wrap;
-    }
-    .search-input {
-      flex: 1;
-      padding: 7px 10px;
-      border-radius: 12px;
-      border: 1px solid #d0d9e4;
-      font-size: 0.8rem;
-      min-width: 100px;
-    }
-    .btn-sm {
-      padding: 6px 10px;
-      border-radius: 12px;
+    .trash-item {
+      background: #fff5f5;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 6px 0;
       font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #fdd;
+    }
+    .receipt-card {
       background: white;
-      -webkit-tap-highlight-color: transparent;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #e2e8f0;
+      font-size: 0.78rem;
     }
-    .btn-print {
-      background: #1e4a6b;
-      color: white;
-      border: none;
-    }
-    .graph-canvas {
-      margin-top: 6px;
-    }
-    .section-divider {
-      font-size: 0.7rem;
-      color: #8a9aa8;
-      margin: 4px 0;
+    .payment-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.65rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+    }
+    .cash-badge { background: #dcfce7; color: #166534; }
+    .mpesa-badge { background: #dbeafe; color: #1e40af; }
+    .section-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 8px 0;
+      color: #1e4a6b;
     }
   </style>
 </head>
 <body>
-<div class="app-container" id="mainAppContainer">
+<div class="app-container">
+  <!-- Top Navigation -->
+  <div class="top-nav" id="topNav">
+    <button class="nav-item active" data-panel="takeaway"><span class="nav-icon">🛒</span>Take Away</button>
+    <button class="nav-item" data-panel="bills"><span class="nav-icon">🧾</span>Bills</button>
+    <button class="nav-item" data-panel="trash"><span class="nav-icon">🗑️</span>Trash</button>
+    <button class="nav-item" data-panel="expense"><span class="nav-icon">💸</span>Expense</button>
+    <button class="nav-item" data-panel="history"><span class="nav-icon">📋</span>History</button>
+    <button class="nav-item" data-panel="analysis"><span class="nav-icon">📊</span>Analysis</button>
+  </div>
   
-  <!-- HEADER -->
-  <div class="header-row">
-    <h1>🐟 FishFlow</h1>
-    <span class="shift-timer">🕘 9:30AM–10:45PM</span>
-    <span class="date-badge" id="currentDateDisplay"></span>
+  <!-- Info bar -->
+  <div class="topbar-info">
+    <span id="topDate"></span>
+    <span>🕘 9:30AM–10:45PM</span>
   </div>
 
-  <!-- PANEL 1: TOTALS -->
-  <div class="panel">
-    <div class="dashboard-grid">
-      <div class="stat-card"><div class="stat-label">💰 Sales</div><div class="stat-value" id="totalSalesDisplay">0</div></div>
-      <div class="stat-card"><div class="stat-label">🧾 Expenses</div><div class="stat-value" id="totalExpensesDisplay">0</div></div>
-      <div class="stat-card"><div class="stat-label">💵 Cash</div><div class="stat-value" id="cashAtHandDisplay">0</div></div>
-    </div>
+  <!-- Dashboard Summary (visible on all panels) -->
+  <div class="dashboard-grid" id="dashboardSummary">
+    <div class="stat-card"><div class="stat-label">💰 Sales</div><div class="stat-value" id="totalSalesDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">🧾 Expenses</div><div class="stat-value" id="totalExpensesDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">💵 Cash</div><div class="stat-value" id="cashAtHandDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">📱 M-Pesa</div><div class="stat-value" id="mpesaTotalDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">💳 Cash Txns</div><div class="stat-value" id="cashTxnsDisplay">0</div></div>
+    <div class="stat-card"><div class="stat-label">📋 Outstanding</div><div class="stat-value" id="outstandingDisplay">0</div></div>
   </div>
 
-  <!-- PANEL 2: FISH & OTHER ITEMS -->
-  <div class="panel">
-    <div class="panel-header">🐠 Fish & Other Items <span class="panel-badge">Sales Entry</span></div>
-    <div class="section-divider">Fish Prices</div>
-    <div class="fish-grid" id="fishPriceContainer"></div>
-    <div class="section-divider">Other Items</div>
-    <div class="other-items" id="otherItemsContainer"></div>
-    <div class="qty-row">
-      <span style="font-size:0.8rem; font-weight:500;">Qty:</span>
-      <input type="number" id="globalQty" class="qty-input" value="1" min="1">
-      <span class="selected-badge" id="selectedItemLabel">No item</span>
-      <button class="add-btn" id="addItemBtn">➕ Add Sale</button>
-    </div>
-  </div>
-
-  <!-- PANEL 3: EXPENSES -->
-  <div class="panel">
-    <div class="panel-header">📝 Add Expense</div>
-    <div class="expense-row">
-      <input type="text" id="expenseName" class="expense-input" placeholder="Expense name">
-      <input type="number" id="expenseAmount" class="amount-input" placeholder="Amount" min="1">
-      <button class="add-btn" id="addExpenseBtn">➕ Add</button>
-    </div>
-  </div>
-
-  <!-- PANEL 4: HISTORY -->
-  <div class="panel">
-    <div class="panel-header">📋 History <span class="panel-badge" id="historyDateLabel"></span></div>
-    <div class="search-row">
-      <input type="text" id="historySearch" class="search-input" placeholder="Search date (YYYY-MM-DD)">
-      <button class="btn-sm" id="searchHistoryBtn">🔍 Search</button>
-      <button class="btn-sm btn-print" id="printDayBtn">🖨️ Print PDF</button>
-    </div>
-    <div class="history-lists">
-      <div class="list-box">
-        <strong style="font-size:0.8rem;">🧾 Sales</strong>
-        <div id="salesList"></div>
-      </div>
-      <div class="list-box">
-        <strong style="font-size:0.8rem;">📋 Expenses</strong>
-        <div id="expensesList"></div>
+  <!-- PANELS -->
+  <div id="panel-takeaway" class="panel active">
+    <div class="section-title">🐠 Fish Prices</div>
+    <div class="item-grid" id="fishContainer"></div>
+    <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="openAddItemModal('fish')">+ Add Fish Price</button>
+    
+    <div class="section-title" style="margin-top:12px;">🥬 Other Items</div>
+    <div class="item-grid" id="otherItemsContainer"></div>
+    <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="openAddItemModal('other')">+ Add Item</button>
+    
+    <div class="card" style="margin-top:12px;">
+      <strong>📋 Current Selection</strong>
+      <div id="selectionList" style="min-height:40px; font-size:0.78rem; margin-top:6px;">No items selected</div>
+      <div class="flex-row" style="margin-top:8px;">
+        <button class="btn btn-danger btn-sm" onclick="clearSelection()">Clear All</button>
+        <span style="font-weight:700; margin-left:auto;">Total: <span id="selectionTotal">0</span>/=</span>
       </div>
     </div>
+    <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="submitOrder()">✅ Submit Order</button>
   </div>
 
-  <!-- PANEL 5: ANALYSIS -->
-  <div class="panel">
-    <div class="panel-header">📈 Analysis</div>
-    <div class="graph-canvas">
-      <div style="font-size:0.75rem; font-weight:600; margin-bottom:2px;">Hourly cash flow (this week)</div>
-      <canvas id="hourlyChart" height="150"></canvas>
+  <div id="panel-bills" class="panel">
+    <h3 style="margin-bottom:10px;">🧾 Today's Receipts</h3>
+    <div id="receiptContainer"></div>
+  </div>
+
+  <div id="panel-trash" class="panel">
+    <h3 style="margin-bottom:10px;">🗑️ Trash Bin</h3>
+    <p style="font-size:0.75rem; color:#888;">Deleted items appear here. Restore or permanently delete.</p>
+    <div id="trashContainer"></div>
+    <button class="btn btn-danger" style="margin-top:12px; width:100%;" onclick="emptyTrash()">🗑️ Permanently Delete All</button>
+  </div>
+
+  <div id="panel-expense" class="panel">
+    <h3 style="margin-bottom:10px;">📝 Add Expense</h3>
+    <div class="flex-row">
+      <input type="text" id="expName" placeholder="Expense name" style="flex:2;">
+      <input type="number" id="expAmt" placeholder="Amount" style="flex:1;">
+      <button class="btn btn-primary" onclick="addExpense()">➕ Add</button>
     </div>
-    <div class="graph-canvas" style="margin-top:10px;">
-      <div style="font-size:0.75rem; font-weight:600; margin-bottom:2px;">Daily comparison (7 days)</div>
-      <canvas id="dailyChart" height="150"></canvas>
+    <div id="expenseListToday" style="margin-top:14px;"></div>
+  </div>
+
+  <div id="panel-history" class="panel">
+    <h3 style="margin-bottom:10px;">📋 History</h3>
+    <div class="flex-row">
+      <input type="date" id="historyDate" onchange="loadHistory()" style="flex:2;">
+      <button class="btn btn-outline btn-sm" onclick="downloadHistoryPDF()">📄 Download PDF</button>
+    </div>
+    <div id="historyContent" style="margin-top:14px;"></div>
+  </div>
+
+  <div id="panel-analysis" class="panel">
+    <h3 style="margin-bottom:10px;">📈 Analysis</h3>
+    <div class="card">
+      <strong>🐟 Fish Type Sales (Today)</strong>
+      <canvas id="fishTypeChart" height="180"></canvas>
+    </div>
+    <div class="card">
+      <strong>⏰ Hourly Cash Flow (This Week)</strong>
+      <canvas id="hourlyChart" height="180"></canvas>
+    </div>
+    <div class="card">
+      <strong>📊 Daily Comparison (7 Days)</strong>
+      <canvas id="dailyChart" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:100; justify-content:center; align-items:center;">
+  <div style="background:white; padding:20px; border-radius:20px; width:92%; max-width:400px;">
+    <h4 style="margin-bottom:12px;">💳 Payment Method</h4>
+    <p style="font-size:0.85rem; margin-bottom:8px;">Total: <strong id="modalTotal">0</strong>/=</p>
+    <select id="paymentMethod" onchange="togglePartial()" style="margin-bottom:10px;">
+      <option value="cash">💵 Cash</option>
+      <option value="mpesa">📱 M-Pesa</option>
+      <option value="partial">💳 Partly Cash & M-Pesa</option>
+    </select>
+    <div id="partialFields" style="display:none; margin-bottom:10px;">
+      <input type="number" id="cashPortion" placeholder="Cash amount" oninput="updatePartial()">
+      <input type="number" id="mpesaPortion" placeholder="M-Pesa amount" oninput="updatePartial()">
+      <small style="color:#888;">Total entered: <span id="partialTotal">0</span> / Expected: <span id="expectedTotalDisplay">0</span></small>
+    </div>
+    <div class="flex-row">
+      <button class="btn btn-primary" style="flex:1;" onclick="confirmPayment()">✅ Confirm</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="closePayment()">Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
-  (function() {
-    const STORAGE_DAYS = 'fishflow_days_v4';
-    const TODAY_KEY = () => getLocalDateString();
-
-    const fishPrices = [200,250,300,350,400,450,500,550,600,650,700,750,800,850,900];
-    const otherItems = [
-      { name: 'Wet Fry', price: 100 },
-      { name: 'Kachumbari', price: 50 },
-      { name: 'Soda 500ml', price: 70 },
-      { name: 'Soda 300ml', price: 50 },
-      { name: 'Soda Bottle', price: 60 },
-      { name: 'Soda 2L', price: 200 },
-      { name: 'Maji Keringet', price: 120 },
-      { name: 'Maji 1.2L', price: 70 },
-      { name: 'Maji Small', price: 50 },
-      { name: 'Wetfry Container', price: 30 },
-      { name: 'Greens Container', price: 20 },
-      { name: 'Bag 20', price: 20 },
-      { name: 'Bag 10', price: 10 },
-      { name: 'Managu', price: 70 },
-      { name: 'Managu Special', price: 100 },
-      { name: 'Spinach', price: 70 },
-      { name: 'Kales', price: 50 }
+  (() => {
+    // State
+    let selectedItems = [];
+    let currentOrderTotal = 0;
+    let pendingOrder = null;
+    let currentPanel = 'takeaway';
+    
+    // Default data
+    let fishPrices = [200,250,300,350,400,450,500,550,600,650,700,750,800,850,900];
+    let otherItems = [
+      'Wet Fry:100', 'Kachumbari:50', 'Soda 500ml:70', 'Soda 300ml:50', 'Soda Bottle:60',
+      'Soda 2L:200', 'Maji Keringet:120', 'Maji 1.2L:70', 'Maji Small:50',
+      'Wetfry Container:30', 'Greens Container:20', 'Bag 20:20', 'Bag 10:10',
+      'Managu:70', 'Managu Special:100', 'Spinach:70', 'Kales:50', 'Ugali:50', 'Lemon:10'
     ];
 
-    let selectedItem = null;
-    let currentViewDate = TODAY_KEY();
-
-    function getLocalDateString() {
-      const d = new Date();
-      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    }
-
-    function loadAllDays() {
-      try {
-        const data = localStorage.getItem(STORAGE_DAYS);
-        return data ? JSON.parse(data) : {};
-      } catch(e) { 
-        console.error('Load error:', e);
-        return {}; 
+    function loadData() {
+      const saved = localStorage.getItem('fishflow_pro_v2');
+      if (saved) {
+        const d = JSON.parse(saved);
+        if (d.fishPrices) fishPrices = d.fishPrices;
+        if (d.otherItems) otherItems = d.otherItems;
       }
     }
-
-    function saveAllDays(daysObj) {
-      try {
-        localStorage.setItem(STORAGE_DAYS, JSON.stringify(daysObj));
-      } catch(e) {
-        console.error('Save error:', e);
-      }
+    function saveData() {
+      localStorage.setItem('fishflow_pro_v2', JSON.stringify({ fishPrices, otherItems }));
     }
 
-    function getDataForDate(dateStr) {
-      const days = loadAllDays();
-      return days[dateStr] || { sales: [], expenses: [] };
+    function getToday() { return new Date().toISOString().split('T')[0]; }
+    
+    function getTransactions() {
+      return JSON.parse(localStorage.getItem('transactions_v2') || '{}');
+    }
+    function saveTransactions(t) {
+      localStorage.setItem('transactions_v2', JSON.stringify(t));
+    }
+    function getExpenses() {
+      return JSON.parse(localStorage.getItem('expenses_v2') || '{}');
+    }
+    function saveExpenses(e) {
+      localStorage.setItem('expenses_v2', JSON.stringify(e));
+    }
+    function getTrash() {
+      return JSON.parse(localStorage.getItem('trash_v2') || '[]');
+    }
+    function saveTrash(t) {
+      localStorage.setItem('trash_v2', JSON.stringify(t));
     }
 
-    function updateTodayData(updater) {
-      const days = loadAllDays();
-      const key = TODAY_KEY();
-      if (!days[key]) days[key] = { sales: [], expenses: [] };
-      updater(days[key]);
-      saveAllDays(days);
-    }
-
-    function updateDateData(dateStr, updater) {
-      const days = loadAllDays();
-      if (!days[dateStr]) days[dateStr] = { sales: [], expenses: [] };
-      updater(days[dateStr]);
-      saveAllDays(days);
-    }
-
-    function renderFishPrices() {
-      const container = document.getElementById('fishPriceContainer');
-      container.innerHTML = fishPrices.map(price => {
-        const sel = (selectedItem && selectedItem.type === 'fish' && selectedItem.price === price) ? 'selected' : '';
-        return `<button class="fish-btn ${sel}" data-fish="${price}">${price}/=</button>`;
+    function renderAllItems() {
+      document.getElementById('fishContainer').innerHTML = fishPrices.map(p => 
+        `<span class="item-chip" onclick="toggleFish(${p})">${p}/=</span>`
+      ).join('');
+      document.getElementById('otherItemsContainer').innerHTML = otherItems.map(item => {
+        const [name, price] = item.split(':');
+        return `<span class="item-chip" onclick="toggleOther('${name.replace(/'/g, "&#39;")}',${price})">${name} ${price}/=</span>`;
       }).join('');
+      updateSelectionDisplay();
     }
 
-    function renderOtherItems() {
-      const container = document.getElementById('otherItemsContainer');
-      container.innerHTML = otherItems.map(item => {
-        const sel = (selectedItem && selectedItem.type === 'other' && selectedItem.name === item.name) ? 'selected' : '';
-        return `<button class="fish-btn ${sel}" data-other-name="${item.name}" data-other-price="${item.price}">${item.name} ${item.price}/=</button>`;
-      }).join('');
-    }
-
-    function updateSelectedLabel() {
-      const label = document.getElementById('selectedItemLabel');
-      if (selectedItem) {
-        label.textContent = selectedItem.type === 'fish' ? `Fish ${selectedItem.price}/=` : `${selectedItem.name} ${selectedItem.price}/=`;
-      } else {
-        label.textContent = 'No item';
+    window.toggleFish = (price) => {
+      const existing = selectedItems.find(i => i.name === `Fish ${price}/=` && i.price === price);
+      if (existing) existing.qty++; 
+      else selectedItems.push({ name: `Fish ${price}/=`, price, qty: 1 });
+      updateSelectionDisplay();
+    };
+    
+    window.toggleOther = (name, price) => {
+      const existing = selectedItems.find(i => i.name === name && i.price === price);
+      if (existing) existing.qty++; 
+      else selectedItems.push({ name, price, qty: 1 });
+      updateSelectionDisplay();
+    };
+    
+    window.clearSelection = () => { selectedItems = []; updateSelectionDisplay(); };
+    
+    function updateSelectionDisplay() {
+      const div = document.getElementById('selectionList');
+      if (selectedItems.length === 0) { 
+        div.innerHTML = 'No items selected'; 
+        document.getElementById('selectionTotal').textContent = '0';
+        currentOrderTotal = 0;
+        return; 
       }
+      div.innerHTML = selectedItems.map((i, idx) => 
+        `<div class="list-item">${i.name} x${i.qty} = ${i.price * i.qty}/= 
+          <button onclick="removeSelection(${idx})" style="background:none;border:none;color:red;cursor:pointer;">✕</button></div>`
+      ).join('');
+      currentOrderTotal = selectedItems.reduce((s, i) => s + i.price * i.qty, 0);
+      document.getElementById('selectionTotal').textContent = currentOrderTotal;
     }
+    
+    window.removeSelection = (idx) => { selectedItems.splice(idx,1); updateSelectionDisplay(); };
 
-    function renderHistory() {
-      const data = getDataForDate(currentViewDate);
-      document.getElementById('historyDateLabel').textContent = currentViewDate;
+    window.submitOrder = () => {
+      if (selectedItems.length === 0) { alert('Select items first'); return; }
+      pendingOrder = { items: [...selectedItems], total: currentOrderTotal };
+      document.getElementById('modalTotal').textContent = currentOrderTotal;
+      document.getElementById('expectedTotalDisplay').textContent = currentOrderTotal;
+      document.getElementById('paymentMethod').value = 'cash';
+      document.getElementById('partialFields').style.display = 'none';
+      document.getElementById('cashPortion').value = '';
+      document.getElementById('mpesaPortion').value = '';
+      document.getElementById('paymentModal').style.display = 'flex';
+    };
+
+    window.togglePartial = () => {
+      const method = document.getElementById('paymentMethod').value;
+      document.getElementById('partialFields').style.display = method === 'partial' ? 'block' : 'none';
+    };
+
+    window.updatePartial = () => {
+      const cash = parseInt(document.getElementById('cashPortion').value) || 0;
+      const mpesa = parseInt(document.getElementById('mpesaPortion').value) || 0;
+      document.getElementById('partialTotal').textContent = cash + mpesa;
+    };
+
+    window.confirmPayment = () => {
+      const method = document.getElementById('paymentMethod').value;
+      let cashAmt = 0, mpesaAmt = 0;
       
-      const salesDiv = document.getElementById('salesList');
-      if (data.sales.length === 0) {
-        salesDiv.innerHTML = '<div style="color:#999; padding:6px;">No sales</div>';
-      } else {
-        salesDiv.innerHTML = data.sales.map((s, i) => 
-          `<div class="list-item">
-            <div class="list-item-content">
-              <span>${s.name} x${s.qty} @${s.price}/=</span>
-              <strong>${s.total}/=</strong>
-            </div>
-            <button class="delete-btn" data-type="sale" data-index="${i}" title="Delete sale">✕</button>
-          </div>`
-        ).join('');
+      if (method === 'cash') cashAmt = currentOrderTotal;
+      else if (method === 'mpesa') mpesaAmt = currentOrderTotal;
+      else {
+        cashAmt = parseInt(document.getElementById('cashPortion').value) || 0;
+        mpesaAmt = parseInt(document.getElementById('mpesaPortion').value) || 0;
+        if (cashAmt + mpesaAmt !== currentOrderTotal) { 
+          alert('Cash + M-Pesa must equal total: ' + currentOrderTotal); 
+          return; 
+        }
       }
+      
+      const trans = getTransactions();
+      const today = getToday();
+      if (!trans[today]) trans[today] = [];
+      trans[today].push({
+        items: [...pendingOrder.items],
+        total: currentOrderTotal,
+        method, cashAmt, mpesaAmt,
+        time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true})
+      });
+      saveTransactions(trans);
+      selectedItems = [];
+      pendingOrder = null;
+      updateSelectionDisplay();
+      document.getElementById('paymentModal').style.display = 'none';
+      updateDashboard();
+      renderBills();
+    };
 
-      const expDiv = document.getElementById('expensesList');
-      if (data.expenses.length === 0) {
-        expDiv.innerHTML = '<div style="color:#999; padding:6px;">No expenses</div>';
-      } else {
-        expDiv.innerHTML = data.expenses.map((e, i) => 
-          `<div class="list-item">
-            <div class="list-item-content">
-              <span>${e.name}</span>
-              <strong>${e.amount}/=</strong>
-            </div>
-            <button class="delete-btn" data-type="expense" data-index="${i}" title="Delete expense">✕</button>
-          </div>`
+    window.closePayment = () => { 
+      document.getElementById('paymentModal').style.display = 'none'; 
+      pendingOrder = null;
+    };
+
+    // Expenses
+    window.addExpense = () => {
+      const name = document.getElementById('expName').value.trim();
+      const amt = parseInt(document.getElementById('expAmt').value);
+      if (!name || !amt || amt < 1) { alert('Enter valid name and amount'); return; }
+      const exp = getExpenses();
+      const today = getToday();
+      if (!exp[today]) exp[today] = [];
+      exp[today].push({ name, amount: amt, time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true}) });
+      saveExpenses(exp);
+      document.getElementById('expName').value = '';
+      document.getElementById('expAmt').value = '';
+      renderExpenses();
+      updateDashboard();
+    };
+
+    function renderExpenses() {
+      const exp = getExpenses();
+      const today = getToday();
+      const list = exp[today] || [];
+      document.getElementById('expenseListToday').innerHTML = list.length === 0 ? 
+        '<p style="color:#999;">No expenses today</p>' :
+        list.map((e,i) => 
+          `<div class="list-item">${e.name} <strong>${e.amount}/=</strong> 
+            <button onclick="deleteExpense(${i})" style="background:none;border:none;color:red;cursor:pointer;">✕</button></div>`
         ).join('');
-      }
     }
 
-    function computeTotals() {
-      const data = getDataForDate(currentViewDate);
-      const salesTotal = data.sales.reduce((s, sale) => s + sale.total, 0);
-      const expTotal = data.expenses.reduce((s, e) => s + e.amount, 0);
+    window.deleteExpense = (i) => {
+      const exp = getExpenses();
+      const today = getToday();
+      if (exp[today]) {
+        const removed = exp[today].splice(i, 1)[0];
+        const trash = getTrash();
+        trash.unshift({ type: 'expense', desc: `${removed.name} ${removed.amount}/=`, time: new Date().toLocaleTimeString(), data: removed });
+        saveTrash(trash);
+        saveExpenses(exp);
+        renderExpenses();
+        updateDashboard();
+      }
+    };
+
+    // Trash
+    function renderTrash() {
+      const trash = getTrash();
+      document.getElementById('trashContainer').innerHTML = trash.length === 0 ? 
+        '<p style="color:#999;">Trash is empty</p>' :
+        trash.map((t, i) => 
+          `<div class="trash-item">
+            <strong>${t.type.toUpperCase()}</strong>: ${t.desc} | 🕒 ${t.time}
+            <div class="flex-row" style="margin-top:4px;">
+              <button class="btn btn-success btn-sm" onclick="undoTrash(${i})">↩️ Restore</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteForever(${i})">❌ Delete Forever</button>
+            </div>
+          </div>`
+        ).join('');
+    }
+
+    window.undoTrash = (i) => {
+      const trash = getTrash();
+      const item = trash[i];
+      if (item.type === 'sale') {
+        const trans = getTransactions();
+        const today = getToday();
+        if (!trans[today]) trans[today] = [];
+        trans[today].push(item.data);
+        saveTransactions(trans);
+        renderBills();
+      } else if (item.type === 'expense') {
+        const exp = getExpenses();
+        const today = getToday();
+        if (!exp[today]) exp[today] = [];
+        exp[today].push(item.data);
+        saveExpenses(exp);
+        renderExpenses();
+      }
+      trash.splice(i,1);
+      saveTrash(trash);
+      renderTrash();
+      updateDashboard();
+    };
+
+    window.deleteForever = (i) => {
+      const trash = getTrash();
+      trash.splice(i,1);
+      saveTrash(trash);
+      renderTrash();
+    };
+
+    window.emptyTrash = () => { 
+      if (confirm('Permanently delete all trash?')) {
+        saveTrash([]); 
+        renderTrash(); 
+      }
+    };
+
+    // Bills
+    function renderBills() {
+      const trans = getTransactions();
+      const today = getToday();
+      const list = trans[today] || [];
+      document.getElementById('receiptContainer').innerHTML = list.length === 0 ?
+        '<p style="color:#999;">No receipts today</p>' :
+        list.map((t, i) => `
+          <div class="receipt-card">
+            <strong>🧾 Receipt #${i+1}</strong> | ${t.time}
+            <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : 'cash-badge'}">
+              ${t.method === 'mpesa' ? '📱 M-Pesa' : t.method === 'cash' ? '💵 Cash' : '💳 Mixed'}
+            </span>
+            <div style="margin-top:6px;">
+              ${t.items.map(it => `<div>• ${it.name} x${it.qty} = ${it.price*it.qty}/=</div>`).join('')}
+            </div>
+            <hr style="margin:6px 0;">
+            <strong>Total: ${t.total}/=</strong>
+            ${t.method === 'partial' ? `<br><small>Cash: ${t.cashAmt}/= | M-Pesa: ${t.mpesaAmt}/=</small>` : ''}
+            <br><button class="btn btn-danger btn-sm" style="margin-top:6px;" onclick="deleteReceipt(${i})">🗑️ Delete</button>
+          </div>
+        `).join('');
+    }
+
+    window.deleteReceipt = (i) => {
+      if (confirm('Move this receipt to trash?')) {
+        const trans = getTransactions();
+        const today = getToday();
+        const removed = trans[today].splice(i, 1)[0];
+        saveTransactions(trans);
+        const trash = getTrash();
+        trash.unshift({ 
+          type: 'sale', 
+          desc: `Receipt: ${removed.items.map(it => it.name).join(', ')} | ${removed.total}/=`, 
+          time: new Date().toLocaleTimeString(), 
+          data: removed 
+        });
+        saveTrash(trash);
+        renderBills();
+        renderTrash();
+        updateDashboard();
+      }
+    };
+
+    // History
+    window.loadHistory = () => {
+      const date = document.getElementById('historyDate').value || getToday();
+      const trans = getTransactions();
+      const exp = getExpenses();
+      const sales = trans[date] || [];
+      const expenses = exp[date] || [];
+      
+      const salesTotal = sales.reduce((s, t) => s + t.total, 0);
+      const expTotal = expenses.reduce((s, e) => s + e.amount, 0);
+      const cashTotal = sales.reduce((s, t) => s + (t.cashAmt || 0), 0);
+      const mpesaTotal = sales.reduce((s, t) => s + (t.mpesaAmt || 0), 0);
+      
+      let html = `<div class="card">
+        <strong>Summary for ${date}</strong><br>
+        💰 Sales: ${salesTotal}/= | 📱 M-Pesa: ${mpesaTotal}/= | 💵 Cash: ${cashTotal}/=<br>
+        🧾 Expenses: ${expTotal}/= | 💵 Cash at Hand: ${cashTotal - expTotal}/=
+      </div>`;
+      
+      html += `<h4 style="margin-top:12px;">Sales</h4>`;
+      if (sales.length === 0) html += '<p style="color:#999;">No sales</p>';
+      else sales.forEach((t, i) => {
+        html += `<div class="receipt-card">
+          #${i+1} | ${t.time} | <span class="payment-badge ${t.method === 'mpesa' ? 'mpesa-badge' : 'cash-badge'}">${t.method}</span>
+          <br>${t.items.map(it => `${it.name} x${it.qty}`).join(', ')}
+          <br><strong>${t.total}/=</strong>
+        </div>`;
+      });
+      
+      html += `<h4 style="margin-top:12px;">Expenses</h4>`;
+      if (expenses.length === 0) html += '<p style="color:#999;">No expenses</p>';
+      else expenses.forEach(e => html += `<div class="list-item">${e.name} <strong>${e.amount}/=</strong></div>`);
+      
+      document.getElementById('historyContent').innerHTML = html;
+    };
+
+    window.downloadHistoryPDF = () => {
+      const el = document.getElementById('historyContent');
+      if (!el.innerHTML.trim()) { alert('No history to download'); return; }
+      html2pdf().set({
+        margin: 8,
+        filename: `FishFlow_History_${document.getElementById('historyDate').value || getToday()}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(el).save();
+    };
+
+    // Add items
+    window.openAddItemModal = (type) => {
+      const name = prompt(type === 'fish' ? 'Enter fish price (e.g., 950):' : 'Enter item name:price (e.g., Chips:80):');
+      if (!name) return;
+      if (type === 'fish') {
+        const price = parseInt(name);
+        if (price && price > 0 && !fishPrices.includes(price)) { 
+          fishPrices.push(price); 
+          fishPrices.sort((a,b) => a-b);
+          saveData(); 
+          renderAllItems(); 
+        }
+      } else {
+        if (name.includes(':') && !otherItems.includes(name)) { 
+          otherItems.push(name); 
+          saveData(); 
+          renderAllItems(); 
+        }
+      }
+    };
+
+    // Dashboard
+    function updateDashboard() {
+      const trans = getTransactions();
+      const exp = getExpenses();
+      const today = getToday();
+      const sales = trans[today] || [];
+      const expenses = exp[today] || [];
+      
+      const salesTotal = sales.reduce((s, t) => s + t.total, 0);
+      const expTotal = expenses.reduce((s, e) => s + e.amount, 0);
+      const cashAmt = sales.reduce((s, t) => s + (t.cashAmt || (t.method === 'cash' ? t.total : 0)), 0);
+      const mpesaAmt = sales.reduce((s, t) => s + (t.mpesaAmt || (t.method === 'mpesa' ? t.total : 0)), 0);
+      
       document.getElementById('totalSalesDisplay').textContent = salesTotal;
       document.getElementById('totalExpensesDisplay').textContent = expTotal;
-      document.getElementById('cashAtHandDisplay').textContent = salesTotal - expTotal;
+      document.getElementById('cashAtHandDisplay').textContent = cashAmt - expTotal;
+      document.getElementById('mpesaTotalDisplay').textContent = mpesaAmt;
+      document.getElementById('cashTxnsDisplay').textContent = cashAmt;
+      document.getElementById('outstandingDisplay').textContent = salesTotal - cashAmt - mpesaAmt;
     }
 
-    function refreshUI() {
-      renderFishPrices();
-      renderOtherItems();
-      updateSelectedLabel();
-      renderHistory();
-      computeTotals();
-      document.getElementById('currentDateDisplay').textContent = currentViewDate;
-      updateGraphs();
-    }
-
-    function selectFish(price) {
-      selectedItem = { type: 'fish', price, name: `Fish ${price}/=` };
-      refreshUI();
-    }
-
-    function selectOther(name, price) {
-      selectedItem = { type: 'other', name, price };
-      refreshUI();
-    }
-
-    function addSale() {
-      if (!selectedItem) { 
-        alert('Select an item first.'); 
-        return; 
-      }
-      const qty = parseInt(document.getElementById('globalQty').value) || 1;
-      if (qty < 1) return;
+    // Analysis
+    let fishTypeChart, hourlyChart, dailyChart;
+    function renderAnalysis() {
+      const trans = getTransactions();
+      const today = getToday();
+      const sales = trans[today] || [];
       
-      updateTodayData(day => day.sales.push({
-        name: selectedItem.name,
-        price: selectedItem.price,
-        qty,
-        total: selectedItem.price * qty,
-        time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true})
-      }));
-      
-      document.getElementById('globalQty').value = 1;
-      refreshUI();
-    }
-
-    function addExpense() {
-      const name = document.getElementById('expenseName').value.trim();
-      const amount = parseInt(document.getElementById('expenseAmount').value);
-      if (!name || !amount || amount < 1) { 
-        alert('Enter valid name and amount.'); 
-        return; 
-      }
-      
-      updateTodayData(day => day.expenses.push({
-        name,
-        amount,
-        time: new Date().toLocaleTimeString('en-KE', {hour:'2-digit',minute:'2-digit',hour12:true})
-      }));
-      
-      document.getElementById('expenseName').value = '';
-      document.getElementById('expenseAmount').value = '';
-      refreshUI();
-    }
-
-    function deleteSale(index) {
-      if (confirm('Delete this sale entry?')) {
-        updateDateData(currentViewDate, day => {
-          day.sales.splice(index, 1);
-        });
-        refreshUI();
-      }
-    }
-
-    function deleteExpense(index) {
-      if (confirm('Delete this expense entry?')) {
-        updateDateData(currentViewDate, day => {
-          day.expenses.splice(index, 1);
-        });
-        refreshUI();
-      }
-    }
-
-    function searchHistory() {
-      const val = document.getElementById('historySearch').value.trim();
-      currentViewDate = val || TODAY_KEY();
-      refreshUI();
-    }
-
-    function generatePDF() {
-      const data = getDataForDate(currentViewDate);
-      const salesTotal = data.sales.reduce((s, sale) => s + sale.total, 0);
-      const expTotal = data.expenses.reduce((s, e) => s + e.amount, 0);
-      
-      // Create a simple, clean PDF content
-      const pdfContent = document.createElement('div');
-      pdfContent.style.cssText = 'padding: 20px; font-family: Arial, sans-serif; background: white; width: 700px;';
-      
-      let html = '<div style="padding: 20px;">';
-      html += '<h1 style="color: #0b3954; font-size: 22px; margin-bottom: 5px;">FishFlow Report</h1>';
-      html += '<p style="font-size: 14px; margin-bottom: 15px;"><strong>Date:</strong> ' + currentViewDate + '</p>';
-      html += '<hr style="border: 1px solid #0b3954; margin-bottom: 20px;">';
-      
-      // Sales section
-      html += '<h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px;">Sales (Total: Ksh ' + salesTotal + ')</h2>';
-      html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
-      html += '<tr style="background: #f0f5fb;"><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Item</th><th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Qty</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Price</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total</th></tr>';
-      
-      if (data.sales.length > 0) {
-        data.sales.forEach(s => {
-          html += '<tr>';
-          html += '<td style="padding: 6px 8px; border: 1px solid #ddd;">' + s.name + '</td>';
-          html += '<td style="padding: 6px 8px; text-align: center; border: 1px solid #ddd;">' + s.qty + '</td>';
-          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;">' + s.price + '/=</td>';
-          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;"><strong>' + s.total + '/=</strong></td>';
-          html += '</tr>';
-        });
-        html += '<tr style="font-weight: bold; background: #f8fafd;"><td colspan="3" style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total Sales</td><td style="padding: 8px; text-align: right; border: 1px solid #ddd;"><strong>' + salesTotal + '/=</strong></td></tr>';
-      } else {
-        html += '<tr><td colspan="4" style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #999;">No sales recorded</td></tr>';
-      }
-      html += '</table>';
-      
-      // Expenses section
-      html += '<h2 style="color: #1e4a6b; font-size: 18px; margin-bottom: 10px; margin-top: 20px;">Expenses (Total: Ksh ' + expTotal + ')</h2>';
-      html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
-      html += '<tr style="background: #f0f5fb;"><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Expense</th><th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Amount</th></tr>';
-      
-      if (data.expenses.length > 0) {
-        data.expenses.forEach(e => {
-          html += '<tr>';
-          html += '<td style="padding: 6px 8px; border: 1px solid #ddd;">' + e.name + '</td>';
-          html += '<td style="padding: 6px 8px; text-align: right; border: 1px solid #ddd;"><strong>' + e.amount + '/=</strong></td>';
-          html += '</tr>';
-        });
-        html += '<tr style="font-weight: bold; background: #f8fafd;"><td style="padding: 8px; text-align: right; border: 1px solid #ddd;">Total Expenses</td><td style="padding: 8px; text-align: right; border: 1px solid #ddd;"><strong>' + expTotal + '/=</strong></td></tr>';
-      } else {
-        html += '<tr><td colspan="2" style="padding: 10px; text-align: center; border: 1px solid #ddd; color: #999;">No expenses recorded</td></tr>';
-      }
-      html += '</table>';
-      
-      html += '<hr style="border: 1px solid #0b3954; margin: 20px 0;">';
-      html += '<h2 style="color: #0b3954; font-size: 20px;">Cash at Hand: Ksh ' + (salesTotal - expTotal) + '</h2>';
-      html += '</div>';
-      
-      pdfContent.innerHTML = html;
-      document.body.appendChild(pdfContent);
-      
-      // Generate PDF immediately
-      html2pdf().set({
-        margin: 10,
-        filename: 'FishFlow_' + currentViewDate + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2,
-          useCORS: true,
-          logging: false
-        },
-        jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait' 
+      // Fish type chart
+      const fishCount = {};
+      sales.forEach(t => t.items.forEach(i => {
+        if (i.name.includes('Fish')) {
+          fishCount[i.price] = (fishCount[i.price] || 0) + i.qty;
         }
-      }).from(pdfContent).save().then(() => {
-        document.body.removeChild(pdfContent);
-      }).catch(err => {
-        console.error('PDF Error:', err);
-        document.body.removeChild(pdfContent);
-        alert('PDF generation failed. Please try again.');
-      });
-    }
-
-    // Graphs
-    let hourlyChart, dailyChart;
-    function updateGraphs() {
-      const days = loadAllDays();
-      const dayKeys = Object.keys(days).sort().slice(-7);
+      }));
       
+      const ctx1 = document.getElementById('fishTypeChart').getContext('2d');
+      if (fishTypeChart) fishTypeChart.destroy();
+      fishTypeChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(fishCount).map(p => `${p}/=`),
+          datasets: [{ label: 'Qty Sold Today', data: Object.values(fishCount), backgroundColor: '#0b3954aa', borderRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+      });
+
+      // Hourly chart (week)
+      const allDays = Object.keys(trans).sort().slice(-7);
       const hourTotals = Array(24).fill(0);
-      dayKeys.forEach(k => {
-        days[k].sales.forEach(s => {
-          if (s.time) {
-            const timeParts = s.time.match(/(\d+)/);
-            if (timeParts) {
-              let h = parseInt(timeParts[1]);
-              if (s.time.includes('PM') && h !== 12) h += 12;
-              if (s.time.includes('AM') && h === 12) h = 0;
-              hourTotals[Math.min(h, 23)] += s.total;
+      allDays.forEach(day => {
+        (trans[day] || []).forEach(t => {
+          if (t.time) {
+            const match = t.time.match(/(\d+)/);
+            if (match) {
+              let h = parseInt(match[1]);
+              if (t.time.includes('PM') && h !== 12) h += 12;
+              if (t.time.includes('AM') && h === 12) h = 0;
+              hourTotals[Math.min(h, 23)] += t.total;
             }
           }
         });
       });
       
-      const ctx1 = document.getElementById('hourlyChart').getContext('2d');
+      const ctx2 = document.getElementById('hourlyChart').getContext('2d');
       if (hourlyChart) hourlyChart.destroy();
-      hourlyChart = new Chart(ctx1, {
+      hourlyChart = new Chart(ctx2, {
         type: 'bar',
         data: {
           labels: Array.from({length:24}, (_,i) => `${i}:00`),
-          datasets: [{ 
-            label: 'Sales (Ksh)', 
-            data: hourTotals, 
-            backgroundColor: '#0b3954aa',
-            borderRadius: 4
-          }]
+          datasets: [{ label: 'Sales (Ksh)', data: hourTotals, backgroundColor: '#1e4a6baa', borderRadius: 3 }]
         },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: true,
-          plugins: {
-            legend: { display: false }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
       });
 
-      const dailySales = dayKeys.map(k => days[k].sales.reduce((s, sale) => s + sale.total, 0));
-      const ctx2 = document.getElementById('dailyChart').getContext('2d');
+      // Daily comparison
+      const dailySales = allDays.map(day => (trans[day] || []).reduce((s, t) => s + t.total, 0));
+      const ctx3 = document.getElementById('dailyChart').getContext('2d');
       if (dailyChart) dailyChart.destroy();
-      dailyChart = new Chart(ctx2, {
+      dailyChart = new Chart(ctx3, {
         type: 'line',
         data: {
-          labels: dayKeys,
-          datasets: [{ 
-            label: 'Daily Sales (Ksh)', 
-            data: dailySales, 
-            borderColor: '#1e4a6b',
-            backgroundColor: 'rgba(30,74,107,0.1)',
-            tension: 0.3,
-            fill: true
-          }]
+          labels: allDays,
+          datasets: [{ label: 'Daily Sales', data: dailySales, borderColor: '#0b3954', backgroundColor: 'rgba(11,57,84,0.1)', tension: 0.3, fill: true }]
         },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: true 
-        }
+        options: { responsive: true, maintainAspectRatio: true }
       });
     }
 
-    // Event bindings
-    document.getElementById('fishPriceContainer').addEventListener('click', e => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const price = btn.dataset.fish;
-      if (price) selectFish(Number(price));
-    });
-    
-    document.getElementById('otherItemsContainer').addEventListener('click', e => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const name = btn.dataset.otherName;
-      const price = btn.dataset.otherPrice;
-      if (name && price) selectOther(name, Number(price));
-    });
-    
-    document.getElementById('addItemBtn').addEventListener('click', addSale);
-    document.getElementById('addExpenseBtn').addEventListener('click', addExpense);
-    document.getElementById('searchHistoryBtn').addEventListener('click', searchHistory);
-    document.getElementById('printDayBtn').addEventListener('click', generatePDF);
-    
-    document.getElementById('historySearch').addEventListener('keypress', e => {
-      if (e.key === 'Enter') searchHistory();
+    // Navigation
+    function switchPanel(panelName) {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + panelName).classList.add('active');
+      currentPanel = panelName;
+      
+      if (panelName === 'bills') renderBills();
+      if (panelName === 'trash') renderTrash();
+      if (panelName === 'expense') renderExpenses();
+      if (panelName === 'history') loadHistory();
+      if (panelName === 'analysis') renderAnalysis();
+      updateDashboard();
+    }
+
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
     });
 
-    // Delete handlers
-    document.getElementById('salesList').addEventListener('click', e => {
-      const btn = e.target.closest('.delete-btn');
-      if (btn && btn.dataset.type === 'sale') {
-        deleteSale(parseInt(btn.dataset.index));
-      }
-    });
+    // Init
+    loadData();
+    renderAllItems();
+    updateDashboard();
+    document.getElementById('topDate').textContent = getToday();
+    document.getElementById('historyDate').value = getToday();
     
-    document.getElementById('expensesList').addEventListener('click', e => {
-      const btn = e.target.closest('.delete-btn');
-      if (btn && btn.dataset.type === 'expense') {
-        deleteExpense(parseInt(btn.dataset.index));
-      }
-    });
-
-    // Initialize
-    refreshUI();
+    // Auto-refresh dashboard every 30 seconds
+    setInterval(updateDashboard, 30000);
   })();
 </script>
 </body>
